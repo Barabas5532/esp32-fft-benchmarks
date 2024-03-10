@@ -1,53 +1,115 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-H2 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- | -------- |
+# ESP32 FFT Benchmarks
 
-# Hello World Example
-
-Starts a FreeRTOS task to print "Hello World".
-
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
-
-## How to use example
-
-Follow detailed instructions provided specifically for this example.
-
-Select the instructions depending on Espressif chip installed on your development board:
-
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
-
-
-## Example folder contents
-
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/app_main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both).
-
-Below is short explanation of remaining files in the project folder.
+## Results on an ESP32 running esp-idf v5.1
 
 ```
-├── CMakeLists.txt
-├── pytest_hello_world.py      Python script used for automated testing
-├── main
-│   ├── CMakeLists.txt
-│   └── hello_world_main.c
-└── README.md                  This is the file you are currently reading
++----------------------------------------------------------+----------+----------+
+| Function name and arguments                              | CPU cycles          |
++----------------------------------------------------------+----------+----------+
+|                                                          | ESP32    | ANSI C   |
++==========================================================+==========+==========+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **FFTs Radix-2 32 bit Floating Point**                   |          |          |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for  64 complex points                   |     6488 |     7949 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 128 complex points                   |    13796 |    17052 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 256 complex points                   |    30013 |    37238 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 512 complex points                   |    65457 |    81387 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 1024 complex points                  |   142015 |   176895 |
++----------------------------------------------------------+----------+----------+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **FFTs Radix-4 32 bit Floating Point**                   |          |          |
++----------------------------------------------------------+----------+----------+
+| dsps_fft4r_fc32 for  64 complex points                   |     4170 |     6052 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft4r_fc32 for 256 complex points                   |    17817 |    27482 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft4r_fc32 for 1024 complex points                  |    81711 |   129013 |
++----------------------------------------------------------+----------+----------+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **Real FFTs Radix-2 32 bit Floating Point**              |          |          |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for  64 real points                      |     3691 |     4406 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 128 real points                      |     7420 |     8973 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 256 real points                      |    16248 |    19032 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 512 real points                      |    33633 |    41138 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft2r_fc32 for 1024 real points                     |    72661 |    89130 |
++----------------------------------------------------------+----------+----------+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **Real FFTs Radix-4 32 bit Floating Point**              |          |          |
++----------------------------------------------------------+----------+----------+
+| dsps_fft4r_fc32 for 128 real points                      |     5104 |     7082 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft4r_fc32 for 512 real points                      |    21437 |    31390 |
++----------------------------------------------------------+----------+----------+
+| dsps_fft4r_fc32 for 2048 real points                     |    97350 |   145070 |
++----------------------------------------------------------+----------+----------+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **ESP32 FFT FFTs 32 bit Floating Point**                 |          |          |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for  64 complex points                 |        0 |     4426 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 128 complex points                 |        0 |     8549 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 256 complex points                 |        0 |    19189 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 512 complex points                 |        0 |    42267 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 1024 complex points                |        0 |    93273 |
++----------------------------------------------------------+----------+----------+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **ESP32 FFT iFFTs 32 bit Floating Point**                |          |          |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for  64 complex points                 |        0 |     5709 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 128 complex points                 |        0 |    11777 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 256 complex points                 |        0 |    25672 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 512 complex points                 |        0 |    53364 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 1024 complex points                |        0 |   114236 |
++----------------------------------------------------------+----------+----------+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **ESP32 FFT Real FFTs 32 bit Floating Point**            |          |          |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 128 real points                    |        0 |     4841 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 256 real points                    |        0 |    11222 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 512 real points                    |        0 |    23215 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 1024 real points                   |        0 |    50258 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 2048 real points                   |        0 |   109200 |
++----------------------------------------------------------+----------+----------+
+|                                                          |          |          |
++----------------------------------------------------------+----------+----------+
+| **ESP32 Real iFFTs 32 bit Floating Point**               |          |          |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 128 real points                    |        0 |     6911 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 256 real points                    |        0 |    14130 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 512 real points                    |        0 |    30329 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 1024 real points                   |        0 |    62629 |
++----------------------------------------------------------+----------+----------+
+| esp32_fft_execute for 2048 real points                   |        0 |   132715 |
++----------------------------------------------------------+----------+----------+
 ```
-
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
-
-## Troubleshooting
-
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
