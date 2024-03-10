@@ -1,0 +1,6 @@
+[submodule "esp32-fft"]
+	path = esp32-fft
+	url = git@github.com:Barabas5532/esp32-fft.git
+[submodule "components/esp-dsp"]
+	path = components/esp-dsp
+	url = https://github.com/espressif/esp-dsp.git

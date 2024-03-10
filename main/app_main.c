@@ -1,6 +1,7 @@
 #include "esp_dsp.h"
 #include "esp_log.h"
 #define USE_FULL_REPORT
+#include "esp32_fft.h"
 #include "report.inc"
 #include "sdkconfig.h"
 #include <malloc.h>
@@ -45,6 +46,50 @@ void app_main(void) {
     abort();
   }
 
+  esp32_fft_config_t *fft_plan_64 =
+      esp32_fft_init(64, ESP32_FFT_COMPLEX, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *fft_plan_128 =
+      esp32_fft_init(128, ESP32_FFT_COMPLEX, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *fft_plan_256 =
+      esp32_fft_init(256, ESP32_FFT_COMPLEX, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *fft_plan_512 =
+      esp32_fft_init(512, ESP32_FFT_COMPLEX, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *fft_plan_1024 =
+      esp32_fft_init(1024, ESP32_FFT_COMPLEX, ESP32_FFT_FORWARD, data1, data2);
+
+  esp32_fft_config_t *real_fft_plan_64 =
+      esp32_fft_init(64, ESP32_FFT_REAL, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *real_fft_plan_128 =
+      esp32_fft_init(128, ESP32_FFT_REAL, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *real_fft_plan_256 =
+      esp32_fft_init(256, ESP32_FFT_REAL, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *real_fft_plan_512 =
+      esp32_fft_init(512, ESP32_FFT_REAL, ESP32_FFT_FORWARD, data1, data2);
+  esp32_fft_config_t *real_fft_plan_1024 =
+      esp32_fft_init(1024, ESP32_FFT_REAL, ESP32_FFT_FORWARD, data1, data2);
+
+  esp32_fft_config_t *ifft_plan_64 =
+      esp32_fft_init(64, ESP32_FFT_COMPLEX, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *ifft_plan_128 =
+      esp32_fft_init(128, ESP32_FFT_COMPLEX, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *ifft_plan_256 =
+      esp32_fft_init(256, ESP32_FFT_COMPLEX, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *ifft_plan_512 =
+      esp32_fft_init(512, ESP32_FFT_COMPLEX, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *ifft_plan_1024 =
+      esp32_fft_init(1024, ESP32_FFT_COMPLEX, ESP32_FFT_BACKWARD, data1, data2);
+
+  esp32_fft_config_t *real_ifft_plan_64 =
+      esp32_fft_init(64, ESP32_FFT_REAL, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *real_ifft_plan_128 =
+      esp32_fft_init(128, ESP32_FFT_REAL, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *real_ifft_plan_256 =
+      esp32_fft_init(256, ESP32_FFT_REAL, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *real_ifft_plan_512 =
+      esp32_fft_init(512, ESP32_FFT_REAL, ESP32_FFT_BACKWARD, data1, data2);
+  esp32_fft_config_t *real_ifft_plan_1024 =
+      esp32_fft_init(1024, ESP32_FFT_REAL, ESP32_FFT_BACKWARD, data1, data2);
+
 #if CONFIG_IDF_TARGET_ESP32
   REPORT_HEADER_ESP32();
 #elif CONFIG_IDF_TARGET_ESP32S3
@@ -82,23 +127,73 @@ void app_main(void) {
   REPORT_BENCHMARK("dsps_fft4r_fc32 for 1024 complex points", dsps_fft4r_fc32,
                    dsps_fft4r_fc32_ansi, data1, 1024);
 
-  REPORT_SECTION("**ESP32 FFTs 32 bit Floating Point**");
+  REPORT_SECTION("**ESP32 FFT FFTs 32 bit Floating Point**");
 
-  // TODO call esp32_fft library
-  REPORT_BENCHMARK_ANSI("dsps_fft2r_fc32 for  64 complex points",
-                        dsps_fft2r_fc32_ansi, data1, 64);
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for  64 complex points",
+                        esp32_fft_execute, fft_plan_64);
 
-  REPORT_BENCHMARK_ANSI("dsps_fft2r_fc32 for 128 complex points",
-                        dsps_fft2r_fc32_ansi, data1, 128);
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 128 complex points",
+                        esp32_fft_execute, fft_plan_128);
 
-  REPORT_BENCHMARK_ANSI("dsps_fft2r_fc32 for 256 complex points",
-                        dsps_fft2r_fc32_ansi, data1, 256);
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 256 complex points",
+                        esp32_fft_execute, fft_plan_256);
 
-  REPORT_BENCHMARK_ANSI("dsps_fft2r_fc32 for 512 complex points",
-                        dsps_fft2r_fc32_ansi, data1, 512);
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 512 complex points",
+                        esp32_fft_execute, fft_plan_512);
 
-  REPORT_BENCHMARK_ANSI("dsps_fft2r_fc32 for 1024 complex points",
-                        dsps_fft2r_fc32_ansi, data1, 1024);
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 1024 complex points",
+                        esp32_fft_execute, fft_plan_1024);
+
+  REPORT_SECTION("**ESP32 FFT Real FFTs 32 bit Floating Point**");
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for  64 real points",
+                        esp32_fft_execute, real_fft_plan_64);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 128 real points",
+                        esp32_fft_execute, real_fft_plan_128);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 256 real points",
+                        esp32_fft_execute, real_fft_plan_256);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 512 real points",
+                        esp32_fft_execute, real_fft_plan_512);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 1024 real points",
+                        esp32_fft_execute, real_fft_plan_1024);
+
+  REPORT_SECTION("**ESP32 FFT iFFTs 32 bit Floating Point**");
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for  64 complex points",
+                        esp32_fft_execute, ifft_plan_64);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 128 complex points",
+                        esp32_fft_execute, ifft_plan_128);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 256 complex points",
+                        esp32_fft_execute, ifft_plan_256);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 512 complex points",
+                        esp32_fft_execute, ifft_plan_512);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 1024 complex points",
+                        esp32_fft_execute, ifft_plan_1024);
+
+  REPORT_SECTION("**ESP32 Real iFFTs 32 bit Floating Point**");
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for  64 real points",
+                        esp32_fft_execute, real_ifft_plan_64);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 128 real points",
+                        esp32_fft_execute, real_ifft_plan_128);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 256 real points",
+                        esp32_fft_execute, real_ifft_plan_256);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 512 real points",
+                        esp32_fft_execute, real_ifft_plan_512);
+
+  REPORT_BENCHMARK_ANSI("esp32_fft_execute for 1024 real points",
+                        esp32_fft_execute, real_ifft_plan_1024);
 
   dsps_fft2r_deinit_fc32();
   dsps_fft4r_deinit_fc32();

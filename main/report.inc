@@ -86,7 +86,7 @@ static void report_separator(const char* fill)
         dsp_EXIT_CRITICAL(intlevel); \
         report_value_line(title, func1_end - func1_start, func2_end - func2_start); \
         report_separator(report_line_str); \
-    } while(0);
+    } while(0)
 
 #define REPORT_BENCHMARK_ANSI(title, func, ...) \
     do { \
@@ -98,7 +98,7 @@ static void report_separator(const char* fill)
         dsp_EXIT_CRITICAL(intlevel); \
         report_value_line(title, 0, func_end - func_start); \
         report_separator(report_line_str); \
-    } while(0);
+    } while(0)
 
 #define REPORT_SECTION(title) \
     do { \
@@ -106,7 +106,7 @@ static void report_separator(const char* fill)
         report_separator(report_line_str); \
         report_text_line(title, report_space_str, report_space_str); \
         report_separator(report_line_str); \
-    } while(0);
+    } while(0)
 
 
 #define REPORT_HEADER_ESP32() \
@@ -116,7 +116,7 @@ static void report_separator(const char* fill)
         report_separator(report_line_str); \
         report_text_line(report_space_str, "ESP32", "ANSI C"); \
         report_separator(report_double_line_str); \
-    } while(0);
+    } while(0)
 
 #define REPORT_HEADER_ESP32S3() \
     do { \
@@ -125,12 +125,12 @@ static void report_separator(const char* fill)
         report_separator(report_line_str); \
         report_text_line(report_space_str, "ESP32S3", "ANSI C"); \
         report_separator(report_double_line_str); \
-    } while(0);
+    } while(0)
 
 #define REPORT_SECTION_NAME(title) \
     do { \
         printf("%s\n", title);\
-    } while(0);
+    } while(0)
 
 #define REPORT_BENCHMARK_CSV(title, func1, func2, ...) \
     do { \
@@ -149,4 +149,4 @@ static void report_separator(const char* fill)
         uint32_t func2_end = xthal_get_ccount(); \
         dsp_EXIT_CRITICAL(intlevel); \
         printf("%s, %"PRIu32", %"PRIu32", %"PRIu32", %"PRIu32"\n", title, (func1_end - func1_start), (func2_end - func2_start), compiler_opt, chip_id); \
-    } while(0);
+    } while(0)
