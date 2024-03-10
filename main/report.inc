@@ -88,6 +88,18 @@ static void report_separator(const char* fill)
         report_separator(report_line_str); \
     } while(0);
 
+#define REPORT_BENCHMARK_ANSI(title, func, ...) \
+    do { \
+        func(__VA_ARGS__); /* warm up the cache */ \
+        unsigned intlevel = dsp_ENTER_CRITICAL(); \
+        uint32_t func_start = xthal_get_ccount(); \
+        func(__VA_ARGS__); \
+        uint32_t func_end = xthal_get_ccount(); \
+        dsp_EXIT_CRITICAL(intlevel); \
+        report_value_line(title, 0, func_end - func_start); \
+        report_separator(report_line_str); \
+    } while(0);
+
 #define REPORT_SECTION(title) \
     do { \
         report_text_line(report_space_str, report_space_str, report_space_str); \
